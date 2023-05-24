@@ -37,7 +37,7 @@ convolved_data = convolve(data, kernel)
 segm = detect_sources(convolved_data, threshold, connectivity=8, npixels = 1)
 segm_deblend = deblend_sources(convolved_data, segm, npixels=1, nlevels=1024, contrast=0, progress_bar = False).data
 positions = []
-I = []
+intensity = []
 sigma = []
 angle = []
 n =  int(np.max(segm_deblend))
@@ -45,12 +45,12 @@ for i in range(1, n+1):
     star_data = np.where(segm_deblend == i, data, 0)
     position = np.unravel_index(np.argmax(star_data), data.shape)
     positions = [*positions,*position]
-    I.append(data[position])
+    intensity.append(data[position])
     sigma.append(1.)
     sigma.append(1.)
     angle.append(0)
 
-p = [*positions, *sigma, *I, *angle ]
+p = [*positions, *sigma, *intensity, *angle ]
 
 def model(x, y,p):
     result = 0
